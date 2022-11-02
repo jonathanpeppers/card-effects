@@ -10,9 +10,9 @@ public partial class MainPage : ContentPage
 		var list = new List<string>(count);
 		for (int i = 1; i <= count; i++)
 		{
-			list.Add ($"https://images.pokemontcg.io/sm35/{i}_hires.png");
+			list.Add($"https://images.pokemontcg.io/sm35/{i}_hires.png");
 		}
-		_collectionView.ItemsSource = list;
+		_carousel.ItemsSource = list;
 	}
 }
 

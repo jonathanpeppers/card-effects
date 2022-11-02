@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CardEffects.MAUI.MainPage">
 
-	<CollectionView x:Name="_collectionView" ItemsLayout="VerticalGrid, 4" ItemSizingStrategy="MeasureFirstItem">
-		<CollectionView.ItemTemplate>
+	<CarouselView x:Name="_carousel">
+		<CarouselView.ItemTemplate>
 			<DataTemplate>
-				<Image Source="{Binding}" />
+				<Image Source="{Binding}" Margin="5" />
 			</DataTemplate>
-		</CollectionView.ItemTemplate>
-	</CollectionView>
+		</CarouselView.ItemTemplate>
+	</CarouselView>
 
 </ContentPage>
