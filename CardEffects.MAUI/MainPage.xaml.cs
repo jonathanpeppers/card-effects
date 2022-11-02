@@ -2,23 +2,17 @@
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
-
 	public MainPage()
 	{
 		InitializeComponent();
-	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
-
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
+		const int count = 30;
+		var list = new List<string>(count);
+		for (int i = 1; i <= count; i++)
+		{
+			list.Add ($"https://images.pokemontcg.io/sm35/{i}_hires.png");
+		}
+		_collectionView.ItemsSource = list;
 	}
 }
 
