@@ -17,6 +17,7 @@ public partial class MainPage : ContentPage
 	float _width, _height;
 	float? _scale;
 	SKMatrix _matrix;
+	SKImageFilter _dropShadow = SKImageFilter.CreateDropShadow(10, 10, 50, 50, SKColors.White.WithAlpha(0xa0), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground);
 
 	public MainPage()
 	{
@@ -128,6 +129,7 @@ public partial class MainPage : ContentPage
 
 	void DrawOne(SKPaintSurfaceEventArgs e, SKCanvas canvas)
 	{
+		_paint.ImageFilter = _dropShadow;
 		canvas.SetMatrix(_matrix);
 		canvas.Scale(_scale ?? 1);
 		WriteLine(canvas.TotalMatrix);
@@ -138,6 +140,7 @@ public partial class MainPage : ContentPage
 
 	void DrawAll(SKPaintSurfaceEventArgs e, SKCanvas canvas)
 	{
+		_paint.ImageFilter = null;
 		var src = new SKRect();
 		var dest = new SKRect(0, 0, _width / 4, _height / 5);
 		var location = new SKPoint();
