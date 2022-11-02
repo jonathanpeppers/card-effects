@@ -15,7 +15,7 @@ public partial class MainPage : ContentPage
 	};
 	SKBitmap _selected;
 	float _width, _height;
-	SKMatrix44 _matrix;
+	SKMatrix _matrix;
 
 	public MainPage()
 	{
@@ -60,19 +60,38 @@ public partial class MainPage : ContentPage
 				_selected = null;
 			}
 			_skia.InvalidateSurface();
-			_matrix = SKMatrix44.CreateIdentity();
+			_matrix = SKMatrix.Identity;
 		}
 		else if (e.InContact)
 		{
-			//TODO: no idea on this yet
+			// Find center of canvas
+			float xCenter = _width / 2;
+			float yCenter = _height / 2;
 
-			//var diff = new SKPoint((e.Location.X * 2 - _width) / _width, (e.Location.Y * 2 - _height) / _height);
-			//WriteLine(diff);
-			//_matrix = SKMatrix44.CreateIdentity();
-			//_matrix.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, diff.X * 10));    // x
-			//_matrix.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, diff.Y * 10));    // y
-			//_matrix.PostConcat(SKMatrix44.CreateRotationDegrees(0, 0, 1, 0));              // z
+			// Translate center to origin
+			SKMatrix matrix = SKMatrix.MakeTranslation(-xCenter, -yCenter);
 
+
+			float depth = 500;
+			var diff = new SKPoint((e.Location.X * 2 - _width) / _width, (e.Location.Y * 2 - _height) / _height);
+
+			// Use 3D matrix for 3D rotations and perspective
+			var matrix44 = SKMatrix44.CreateIdentity();
+			matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, diff.Y * 10));    // x
+			matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, diff.X * 10));    // y
+			matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 0, 1, 0));              // z
+
+			SKMatrix44 perspectiveMatrix = SKMatrix44.CreateIdentity();
+			perspectiveMatrix[3, 2] = -1 / depth;
+			matrix44.PostConcat(perspectiveMatrix);
+
+			// Concatenate with 2D matrix
+			SKMatrix.PostConcat(ref matrix, matrix44.Matrix);
+
+			// Translate back to center
+			SKMatrix.PostConcat(ref matrix, SKMatrix.MakeTranslation(xCenter, yCenter));
+
+			_matrix = matrix;
 			_skia.InvalidateSurface();
 		}
 
@@ -99,7 +118,7 @@ public partial class MainPage : ContentPage
 
 	void DrawOne(SKPaintSurfaceEventArgs e, SKCanvas canvas)
 	{
-		canvas.SetMatrix(_matrix.Matrix);
+		canvas.SetMatrix(_matrix);
 		var dest = new SKRect(0, 0, e.Info.Width, e.Info.Height);
 		canvas.DrawBitmap(_selected, dest, _paint);
 	}
