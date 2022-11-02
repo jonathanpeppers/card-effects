@@ -15,6 +15,7 @@ public partial class MainPage : ContentPage
 	};
 	SKBitmap _selected;
 	float _width, _height;
+	float? _scale;
 	SKMatrix _matrix;
 
 	public MainPage()
@@ -62,7 +63,7 @@ public partial class MainPage : ContentPage
 			_skia.InvalidateSurface();
 			_matrix = SKMatrix.Identity;
 		}
-		else if (e.InContact)
+		else
 		{
 			// Find center of canvas
 			float xCenter = _width / 2;
@@ -100,6 +101,13 @@ public partial class MainPage : ContentPage
 
 	void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
 	{
+		if (_scale == null)
+		{
+			_scale = (float)e.RawInfo.Width / (float)e.Info.Width;
+		}
+		_width = e.Info.Width;
+		_height = e.Info.Height;
+
 		var canvas = e.Surface.Canvas;
 		canvas.Clear(SKColors.Black);
 	
@@ -119,14 +127,15 @@ public partial class MainPage : ContentPage
 	void DrawOne(SKPaintSurfaceEventArgs e, SKCanvas canvas)
 	{
 		canvas.SetMatrix(_matrix);
-		var dest = new SKRect(0, 0, e.Info.Width, e.Info.Height);
+		canvas.Scale(_scale ?? 1);
+		WriteLine(canvas.TotalMatrix);
+
+		var dest = new SKRect(0, 0, _width, _height);
 		canvas.DrawBitmap(_selected, dest, _paint);
 	}
 
 	void DrawAll(SKPaintSurfaceEventArgs e, SKCanvas canvas)
 	{
-		_width = e.Info.Width;
-		_height = e.Info.Height;
 		var src = new SKRect();
 		var dest = new SKRect(0, 0, _width / 4, _height / 5);
 		var location = new SKPoint();
