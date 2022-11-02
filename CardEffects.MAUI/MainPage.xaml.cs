@@ -65,6 +65,8 @@ public partial class MainPage : ContentPage
 		}
 		else
 		{
+			// This code came from: https://learn.microsoft.com/xamarin/xamarin-forms/user-interface/graphics/skiasharp/transforms/3d-rotation
+
 			// Find center of canvas
 			float xCenter = _width / 2;
 			float yCenter = _height / 2;
