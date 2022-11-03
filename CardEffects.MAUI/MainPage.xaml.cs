@@ -17,7 +17,18 @@ public partial class MainPage : ContentPage
 	float _width, _height;
 	float? _scale;
 	SKMatrix _matrix;
-	SKImageFilter _dropShadow = SKImageFilter.CreateDropShadow(10, 10, 50, 50, SKColors.White.WithAlpha(0xa0), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground);
+	SKImageFilter _filter =
+		SKImageFilter.CreateCompose(
+			
+			// Blend mode
+			SKImageFilter.CreateBlendMode(SKBlendMode.Plus, 
+				// Specular light
+				SKImageFilter.CreatePointLitSpecular(new SKPoint3(200, 540, 50), SKColors.White, surfaceScale: 1f, ks: 2f, shininess: 100f)
+			),
+
+			// Drop Shadow
+			SKImageFilter.CreateDropShadow(10, 10, 50, 50, SKColors.White.WithAlpha(0xa0), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground)
+		);
 
 	public MainPage()
 	{
@@ -156,14 +167,8 @@ public partial class MainPage : ContentPage
 		canvas.Scale(_scale ?? 1);
 
 		var dest = new SKRect(0, 0, _width, _height);
-		_paint.ImageFilter = _dropShadow;
+		_paint.ImageFilter = _filter;
 		canvas.DrawBitmap(_selected, dest, _paint);
-
-		// Experiment with lighting
-		//canvas.ResetMatrix();
-		////_paint2.ImageFilter = SKImageFilter.CreatePointLitDiffuse(new SKPoint3(200, 200, 15), SKColors.White, surfaceScale: 1f, kd: 2f);
-		//_paint2.Shader = SKShader.CreateRadialGradient(new SKPoint(200, 200), 50f, new SKColor[] { SKColors.White, SKColors.White, SKColors.Transparent }, SKShaderTileMode.Clamp);
-		//canvas.DrawRect(dest, _paint2);
 	}
 
 	void DrawAll(SKPaintSurfaceEventArgs e, SKCanvas canvas)
