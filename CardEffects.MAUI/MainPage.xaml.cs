@@ -25,13 +25,14 @@ public partial class MainPage : ContentPage
 
 		for (int i = 1; i <= Count; i++)
 		{
-			_ = DownloadAsync($"https://images.pokemontcg.io/sm35/{i}_hires.png");
+			//_ = DownloadAsync($"https://images.pokemontcg.io/sm35/{i}_hires.png");
+			_ = DownloadAsync($"https://images.pokemontcg.io/swsh3/{i}_hires.png");
 		}
 	}
 
 	async Task DownloadAsync(string url)
 	{
-		var path = Path.Combine(Path.GetTempPath(), Path.GetFileName(url));
+		var path = Path.Combine(Path.GetTempPath(), $"pokemon-{Hash(url)}.png");
 
 		if (!File.Exists(path))
 		{
@@ -45,6 +46,28 @@ public partial class MainPage : ContentPage
 		{
 			_bitmaps.Add(bitmap);
 			Dispatcher.Dispatch(_skia.InvalidateSurface);
+		}
+	}
+
+	/// <summary>
+	/// Based on: https://andrewlock.net/why-is-string-gethashcode-different-each-time-i-run-my-program-in-net-core/
+	/// </summary>
+	static int Hash(string str)
+	{
+		unchecked
+		{
+			int hash1 = (5381 << 16) + 5381;
+			int hash2 = hash1;
+
+			for (int i = 0; i < str.Length; i += 2)
+			{
+				hash1 = ((hash1 << 5) + hash1) ^ str[i];
+				if (i == str.Length - 1)
+					break;
+				hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+			}
+
+			return hash1 + (hash2 * 1566083941);
 		}
 	}
 
