@@ -152,13 +152,18 @@ public partial class MainPage : ContentPage
 
 	void DrawOne(SKPaintSurfaceEventArgs e, SKCanvas canvas)
 	{
-		_paint.ImageFilter = _dropShadow;
 		canvas.SetMatrix(_matrix);
 		canvas.Scale(_scale ?? 1);
-		WriteLine(canvas.TotalMatrix);
 
 		var dest = new SKRect(0, 0, _width, _height);
+		_paint.ImageFilter = _dropShadow;
 		canvas.DrawBitmap(_selected, dest, _paint);
+
+		// Experiment with lighting
+		//canvas.ResetMatrix();
+		////_paint2.ImageFilter = SKImageFilter.CreatePointLitDiffuse(new SKPoint3(200, 200, 15), SKColors.White, surfaceScale: 1f, kd: 2f);
+		//_paint2.Shader = SKShader.CreateRadialGradient(new SKPoint(200, 200), 50f, new SKColor[] { SKColors.White, SKColors.White, SKColors.Transparent }, SKShaderTileMode.Clamp);
+		//canvas.DrawRect(dest, _paint2);
 	}
 
 	void DrawAll(SKPaintSurfaceEventArgs e, SKCanvas canvas)
