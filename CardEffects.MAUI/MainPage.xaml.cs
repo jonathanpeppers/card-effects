@@ -18,16 +18,10 @@ public partial class MainPage : ContentPage
 	float? _scale;
 	SKMatrix _matrix;
 	SKImageFilter _filter =
-		SKImageFilter.CreateCompose(
-			
-			// Blend mode
-			SKImageFilter.CreateBlendMode(SKBlendMode.Plus, 
-				// Specular light
-				SKImageFilter.CreatePointLitSpecular(new SKPoint3(200, 540, 50), SKColors.White, surfaceScale: 1f, ks: 2f, shininess: 100f)
-			),
-
-			// Drop Shadow
-			SKImageFilter.CreateDropShadow(10, 10, 50, 50, SKColors.White.WithAlpha(0xa0), SKDropShadowImageFilterShadowMode.DrawShadowAndForeground)
+		// Blend mode
+		SKImageFilter.CreateBlendMode(SKBlendMode.Plus, 
+			// Specular light
+			SKImageFilter.CreatePointLitSpecular(new SKPoint3(200, 540, 50), SKColors.White, surfaceScale: 1f, ks: 2f, shininess: 100f)
 		);
 
 	public MainPage()
